@@ -3,12 +3,12 @@
 # 
 #   def access_denied
 #     redirect_to(:controller=> '/account', :action => 'login')
-#  end  
+#   end  
 module AuthenticatedSystem
   protected
 
   def authenticated?
-    not current_user.nil?
+    !!current_user
   end
 
   # overwrite this if you want to restrict access to only a few actions
@@ -33,6 +33,10 @@ module AuthenticatedSystem
   def current_user=(user)
     session[:user_id] = user.nil? ? nil : user.id
     @current_user = user
+    post_set_current_user
+  end
+
+  def post_set_current_user
   end
 
   # overwrite this method if you only want to protect certain actions of the controller
@@ -87,5 +91,5 @@ end
 ActionController::Base.class_eval do
   include AuthenticatedSystem
   before_filter :check_authorization
-  helper_method, :current_user, :authenticated?
+  helper_method :current_user, :authenticated?
 end
