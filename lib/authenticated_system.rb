@@ -7,7 +7,7 @@
 module AuthenticatedSystem
   protected
 
-  def authenticated?
+  def is_authenticated?
     !!current_user
   end
 
@@ -57,9 +57,9 @@ module AuthenticatedSystem
   def check_authorization
     # skip login check if action is not protected
     return true unless protect?
-
+    
     # check if user is logged in and authorized
-    return true if authenticated? and authorized?
+    return true if is_authenticated? and authorized?
 
     # store current location so that we can 
     # come back after the user logged in
@@ -91,5 +91,5 @@ end
 ActionController::Base.class_eval do
   include AuthenticatedSystem
   before_filter :check_authorization
-  helper_method :current_user, :authenticated?
+  helper_method :current_user, :is_authenticated?
 end
