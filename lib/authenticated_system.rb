@@ -86,10 +86,13 @@ module AuthenticatedSystem
     session[:return_to] ? redirect_to_url(session[:return_to]) : redirect_to(default)
     session[:return_to] = nil
   end
+
+  def self.included(base)
+    base.send :before_filter, :check_authorization
+    base.send :helper_method, :current_user, :is_authenticated?
+  end
 end
 
 ActionController::Base.class_eval do
   include AuthenticatedSystem
-  before_filter :check_authorization
-  helper_method :current_user, :is_authenticated?
 end
