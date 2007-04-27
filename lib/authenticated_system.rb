@@ -1,10 +1,20 @@
 # The Authenticated System requires that the user implement access_denied
 # in the ApplicationController class that determines
 #
-#   def access_denied!
-#     redirect_to(:controller=> '/account', :action => 'login')
-#   end
+#  def access_denied!
+#    if not is_authenticated?
+#      redirect_to(:controller=> '/account', :action => 'login')
+#    else
+#      redirect_to(:controller => '/security', :action => 'access_denied')
+#    end
+#  end
+
 module AuthenticatedSystem
+  # Security error. Controllers throw these in situations where a user is trying to access a
+  # function that he is not authorized to access.
+  class SecurityError < StandardError
+  end
+
   protected
 
   def is_authenticated?
@@ -86,12 +96,19 @@ module AuthenticatedSystem
     session[:return_to] = nil
   end
 
-  def self.included(base)
-    base.send :before_filter, :check_authorization
-    base.send :helper_method, :current_user, :is_authenticated?
+  # if an error occurs and it is a security error then redirect to access_denied page
+  def rescue_action(e)
+     if e.is_a?(AuthenticatedSystem::SecurityError)
+        access_denied!
+     else
+        super
+     end
   end
-end
 
-ActionController::Base.class_eval do
-  include AuthenticatedSystem
+  def self.included(base)
+    base.class_eval do
+      before_filter :check_authorization
+      helper_method :current_user, :is_authenticated?
+    end
+  end
 end
