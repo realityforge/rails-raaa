@@ -21,6 +21,10 @@ module AuthenticatedSystem
     !!current_user
   end
 
+  def find_active_user(id)
+    User.find_by_id(id)
+  end
+
   # overwrite this if you want to restrict access to only a few actions
   # or if you want to check if the user has the correct rights
   # example:
@@ -35,7 +39,7 @@ module AuthenticatedSystem
 
   # accesses the current user from the session.
   def current_user
-    @current_user ||= session[:user_id] ? User.find_by_id(session[:user_id]) : nil
+    @current_user ||= session[:user_id] ? find_active_user(session[:user_id]) : nil
   end
 
   # store the given user in the session.  overwrite this to set how
