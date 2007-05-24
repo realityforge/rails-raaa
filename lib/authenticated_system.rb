@@ -1,5 +1,10 @@
-# The Authenticated System requires that the user implement access_denied
-# in the ApplicationController class that determines
+# The Authenticated System requires that the developer implement two methods in the
+# ApplicationController or all controllers that includes this class. These methods
+# are "find_active_user(id)" and "access_denied!". See below for sample implementations.
+#
+#  def find_active_user(id)
+#    User.find_by_id(id)
+#  end
 #
 #  def access_denied!
 #    if not is_authenticated?
@@ -19,10 +24,6 @@ module AuthenticatedSystem
 
   def is_authenticated?
     !!current_user
-  end
-
-  def find_active_user(id)
-    User.find_by_id(id)
   end
 
   # overwrite this if you want to restrict access to only a few actions
