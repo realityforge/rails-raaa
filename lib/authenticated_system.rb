@@ -109,6 +109,12 @@ module AuthenticatedSystem
         super
      end
   end
+  
+  module Test
+    def logout
+      @controller.set_instance_variable('@current_user', nil)
+    end
+  end
 
   def self.included(base)
     base.class_eval do
