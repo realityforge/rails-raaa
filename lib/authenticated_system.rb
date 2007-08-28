@@ -112,7 +112,7 @@ module AuthenticatedSystem
   
   module Test
     def logout
-      @controller.set_instance_variable('@current_user', nil)
+      @controller.instance_variable_set('@current_user', nil)
     end
   end
 
