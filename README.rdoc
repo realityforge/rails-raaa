@@ -1,0 +1,45 @@
+= raaa
+
+The raaa plugin is a very very basic implementation of an authentication and
+authorization system. The plugin provides just enough code to abstract the
+authentication and authorization approach. The plugin does not dictate the
+implementation of the authentication or authorization.
+
+The simplest use of the plugin requires the inclusion of <tt>AuthenticatedSystem</tt>
+in the controller and the implementation of two methods; <tt>find_active_user(id)</tt>
+and <tt>access_denied!</tt>. e.g.
+
+  class ApplicationController < ActionController::Base
+    include AuthenticatedSystem
+
+    protected
+
+    def find_active_user(id)
+      User.find_by_id(id)
+    end
+
+    def access_denied!
+      if not is_authenticated?
+        redirect_to(:controller=> '/account', :action => 'login')
+      else
+        redirect_to(:controller => '/security', :action => 'access_denied')
+      end
+    end
+  end
+
+The plugin user can also override <tt>protect?</tt> to limit the actions that require
+authentication. e.g.
+
+  # don't protect the login and the about method
+  def protect?
+    if ['login', 'about'].include?(action_name)
+      return false
+    else
+      return true
+    end
+  end
+
+The plugin also supports redirecting back to a page after login, customizable
+authorization after authentication, hooking into the storing of user information
+in the session etc. See the documentation of <tt>AuthenticatedSystem</tt> for more
+details.
