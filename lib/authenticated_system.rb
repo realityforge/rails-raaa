@@ -30,7 +30,7 @@ module AuthenticatedSystem
   # or if you want to check if the user has the correct rights
   # example:
   #
-  #  # only allow nonbobs
+  #  # only allow non-bobs
   #  def authorize?
   #    current_user.name != "bob"
   #  end
@@ -51,6 +51,7 @@ module AuthenticatedSystem
     post_set_current_user
   end
 
+  # Template method called when user is set. Override to hook into event.   
   def post_set_current_user
   end
 
