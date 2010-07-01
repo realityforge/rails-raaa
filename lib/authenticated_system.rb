@@ -46,12 +46,17 @@ module AuthenticatedSystem
   # store the given user in the session.  overwrite this to set how
   # users are stored in the session.
   def current_user=(user)
-    session[:user_id] = user.nil? ? nil : user.id
+    session[:user_id] = user.nil? ? nil : user_to_id(user)
     @current_user = user
     post_set_current_user
   end
 
-  # Template method called when user is set. Override to hook into event.   
+  # Method to convert user object into ID to store in session
+  def user_to_id(user)
+    user.id
+  end
+
+  # Template method called when user is set. Override to hook into event.
   def post_set_current_user
   end
 
