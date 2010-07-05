@@ -98,12 +98,21 @@ module AuthenticatedSystem
   # store current uri in  the session.
   # we can return to this location by calling return_location
   def store_location
-    session[:return_to] = request.request_uri
+    # Some web servers do wierd things.
+    # Webrick & Mongrel both include the relative root as part of the request_uri, glassfish doesn't
+    relative_path = ActionController::Base.relative_url_root
+    uri = request.request_uri
+    session[:return_to] =
+      if uri =~ /^#{relative_path}/i
+        uri
+      else
+        "#{relative_path}#{request.request_uri}"
+      end
   end
 
   # move to the last store_location call or to the passed default one
   def redirect_back_or_default(default)
-    session[:return_to] ? redirect_to_url(session[:return_to]) : redirect_to(default)
+    session[:return_to] ? redirect_to(session[:return_to]) : redirect_to(default)
     session[:return_to] = nil
   end
 
