@@ -118,13 +118,13 @@ module AuthenticatedSystem
 
   # if an error occurs and it is a security error then redirect to access_denied page
   def rescue_action(e)
-     if e.is_a?(AuthenticatedSystem::SecurityError)
-        access_denied!
-     else
-        super
-     end
+    if e.is_a?(AuthenticatedSystem::SecurityError)
+      access_denied!
+    else
+      super
+    end
   end
-  
+
   module Test
     def logout
       @controller.instance_variable_set('@current_user', nil)
